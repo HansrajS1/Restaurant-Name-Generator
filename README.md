@@ -1,6 +1,7 @@
 ﻿# 🍽️ Restaurant Name & Menu Generator
 
 This project is a Streamlit web app that uses **LangChain** and **Azure OpenAI** to generate a creative **restaurant name** and a list of **authentic menu items** based on a selected cuisine.
+
 🔗 **Live App:** [https://restaurant-name-generator-hansraj.streamlit.app](https://restaurant-name-generator-hansraj.streamlit.app)
 
 ---
