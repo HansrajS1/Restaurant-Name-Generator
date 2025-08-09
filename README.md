@@ -33,3 +33,5 @@ This project is a Streamlit web app that uses **LangChain** and **Azure OpenAI**
 ```bash
 git clone https://github.com/your-username/restaurant-name-generator.git
 cd restaurant-name-generator
+pip install -r requirements.txt
+
