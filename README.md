@@ -28,10 +28,12 @@ This project is a Streamlit web app that uses **LangChain** and **Azure OpenAI**
 
 ## 🔧 Setup Instructions
 
-### 1. Clone the repo
+### Clone the repo and open terminal run :
 
 ```bash
 git clone https://github.com/your-username/restaurant-name-generator.git
 cd restaurant-name-generator
 pip install -r requirements.txt
+streamlit run main.py
+
 
