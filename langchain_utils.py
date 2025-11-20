@@ -1,13 +1,12 @@
 from langchain_core.prompts import PromptTemplate
-from langchain.chains import SequentialChain
-from langchain.chains.llm import LLMChain
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 
 from langchain.chat_models import AzureChatOpenAI
 import os
-
 from dotenv import load_dotenv
-load_dotenv()
 
+load_dotenv()
 
 llm = AzureChatOpenAI(
     deployment_name=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
@@ -15,39 +14,38 @@ llm = AzureChatOpenAI(
     temperature=0.7
 )
 
-
 def generate_restaurant_name_and_items(cuisine):
-
     prompt_template_name = PromptTemplate(
-        input_variables=['cuisine'],
+        input_variables=["cuisine"],
         template=(
             "I want to open a modern and appealing restaurant serving {cuisine} cuisine. "
             "Suggest a unique, catchy, and respectful name suitable for a brand. "
             "Avoid culturally sensitive titles like royal ranks or religious references. "
-            "Final output should only be a name of restaurant name."
-            "example 'restaurant name: Curry Craft'."
+            "Final output should ONLY be the restaurant name. "
+            "Example: 'Curry Craft'."
         )
     )
-
-    name_chain = LLMChain(llm=llm, prompt=prompt_template_name, output_key="restaurant_name")
-
+    name_chain = prompt_template_name | llm | StrOutputParser()
     prompt_template_items = PromptTemplate(
-        input_variables=['restaurant_name', 'cuisine'],
+        input_variables=["restaurant_name", "cuisine"],
         template=(
             "The restaurant '{restaurant_name}' serves delicious {cuisine} cuisine. "
-            "Suggest 6 to 8 authentic and popular menu items that match this cuisine. "
-            "Include a mix of appetizers, mains, and sides if possible. "
-            "Return only the names of the dishes as a comma-separated list, with no additional text and space or new line."
+            "Suggest 6 to 8 authentic, popular menu items. "
+            "Return ONLY dish names, comma-separated, no extra text."
         )
     )
-
-    food_items_chain = LLMChain(llm=llm, prompt=prompt_template_items, output_key="menu_items")
-
-    chain = SequentialChain(
-        chains=[name_chain, food_items_chain],
-        input_variables=['cuisine'],
-        output_variables=['restaurant_name', 'menu_items'],
-        verbose=False
+    food_items_chain = prompt_template_items | llm | StrOutputParser()
+    full_chain = (
+        {
+            "restaurant_name": name_chain,
+            "cuisine": RunnablePassthrough()
+        }
+        | food_items_chain
     )
+    restaurant_name = name_chain.invoke({"cuisine": cuisine})
+    menu_items = full_chain.invoke({"cuisine": cuisine})
 
-    return chain.invoke({'cuisine': cuisine})
+    return {
+        "restaurant_name": restaurant_name,
+        "menu_items": menu_items
+    }
