@@ -1,5 +1,4 @@
 import streamlit as st
-import lainchain
 import langchain_utils
 
 
