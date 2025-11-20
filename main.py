@@ -1,5 +1,7 @@
 import streamlit as st
 import lainchain
+import langchain_utils
+
 
 st.set_page_config(page_title="Restaurant Name Generator", page_icon="🍽️")
 
