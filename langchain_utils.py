@@ -1,6 +1,7 @@
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain.chains import SequentialChain
 from langchain.chains.llm import LLMChain
+
 from langchain.chat_models import AzureChatOpenAI
 import os
 
