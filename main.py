@@ -17,6 +17,6 @@ if cuisine:
 
     menu_items = response["menu_items"].strip().split(",")
 
-    st.subheader("🍲 Menu Items")
+    st.subheader(" Menu Items")
     for item in menu_items:
         st.write("- " + item.strip())
